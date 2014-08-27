@@ -47,37 +47,37 @@
 #define LPC178X_EMC_AM		0x89
 
 /*
- * Timing for 54MHz bus
+ * Timing for 120MHz bus original was for 54Mhs
  */
-#define LPC178X_EMC_RAS		2
-#define LPC178X_EMC_CAS		2
+#define LPC178X_EMC_RAS		3
+#define LPC178X_EMC_CAS		3
 /* Command delayed strategy, using EMCCLKDELAY */
 #define LPC178X_EMC_RDCFG_RD	1
 /* Precharge command period (tRP) = 1 EMC clock cycle */
-#define LPC178X_EMC_T_RP	1
+#define LPC178X_EMC_T_RP	4
 /* Active to precharge command perion (tRAS) = 3 clocks */
-#define LPC178X_EMC_T_RAS	3
+#define LPC178X_EMC_T_RAS	7
 /* Self-refresh exit time (tSREX) = 4 clocks */
-#define LPC178X_EMC_T_SREX	4
+#define LPC178X_EMC_T_SREX	0xB
 /* Last-data-out to active command time (tAPR) = 2 clocks */
-#define LPC178X_EMC_T_APR	2
+#define LPC178X_EMC_T_APR	6
 /* Data-in to active command (tDAL) = 2 clocks */
-#define LPC178X_EMC_T_DAL	2
+#define LPC178X_EMC_T_DAL	6
 /* Write recovery time (tWR) = 2 clocks */
-#define LPC178X_EMC_T_WR	2
+#define LPC178X_EMC_T_WR	3
 /* Active to active command perion (tRC) = 4 clocks */
-#define LPC178X_EMC_T_RC	4
+#define LPC178X_EMC_T_RC	9
 /*
  * Auto-refresh period and auto-refresh to active command period
  * (tRFC) = 4 clocks
  */
-#define LPC178X_EMC_T_RFC	4
+#define LPC178X_EMC_T_RFC	9
 /* Exit self-refresh to active command time (tXSR) = 4 clocks */
-#define LPC178X_EMC_T_XSR	4
+#define LPC178X_EMC_T_XSR	0xB
 /* Active bank A to active bank B latency (tRRD) = 1 clock */
-#define LPC178X_EMC_T_RRD	1
+#define LPC178X_EMC_T_RRD	3
 /* Load mode register to active command time (tMRD) = 1 clock */
-#define LPC178X_EMC_T_MRD	1
+#define LPC178X_EMC_T_MRD	3
 
 /*
  * Refresh timer.
@@ -474,6 +474,42 @@ int misc_init_r(void)
 }
 #endif /* CONFIG_MISC_INIT_R */
 
+
+#define SIZE_MBIT    (  128 )
+#define COLUMNS      (  512 )
+#define ROWS         ( 4096 )
+#define BANKS        (    4 )
+#define CAS          ( 3 )
+#define RAS          ( 3 )
+#define BURST        ( 8 )
+#define RBC_BRC      RBC
+#define BUS_WID      BUS_16BIT
+
+
+#define RBC        (  0x0 )
+#define BRC        (  0x1 )
+#define BUS_16BIT  (  0x0 )
+#define BUS_32BIT  (  0x1 )
+
+
+#define _NBITS2(N)  ( (0==( ( N ) & (long long)0x0000000000000002 )) ?           0   :                  1     )
+#define _NBITS4(N)  ( (0==( ( N ) & (long long)0x000000000000000C )) ? ( _NBITS2(N)) : (2 + _NBITS2((N)>>2) ) )
+#define _NBITS8(N)  ( (0==( ( N ) & (long long)0x00000000000000F0 )) ? ( _NBITS4(N)) : (4 + _NBITS4((N)>>4) ) )
+#define _NBITS16(N) ( (0==( ( N ) & (long long)0x000000000000FF00 )) ? ( _NBITS8(N)) : (8 + _NBITS8((N)>>8) ) )
+#define _NBITS32(N) ( (0==( ( N ) & (long long)0x00000000FFFF0000 )) ? (_NBITS16(N)) : (16+_NBITS16((N)>>16)) )
+#define _NBITS64(N) ( (0==( ( N ) & (long long)0xFFFFFFFF00000000 )) ? (_NBITS32(N)) : (32+_NBITS32((N)>>32)) )
+#define NBITS32(N)  ( (0==(N)) ? 0 : (_NBITS32(N)+1) )
+#define NBITS64(N)  ( (0==(N)) ? 0 : (_NBITS64(N)+1) )
+#define LOG2(N)     ( (0==(N)) ? 0 : ((1==(N)) ? 0 : _NBITS64(N) ) )
+
+#define SIZE_VAL                           ( 16==( SIZE_MBIT ) ? 0x0 : LOG2(SIZE_MBIT)-5 )
+#define COL_BITS                           LOG2(COLUMNS)
+#define COL_VAL                            ( (COLUMNS==( ( ( ( ( SIZE_MBIT ) * 1024 *1024 ) / BANKS ) / ROWS ) / ( (BUS_WID + 1) * 16 ) )) ? 0x1 : 0x0 )
+#define BANKS_BITS                         LOG2(BANKS)
+#define BURST_VAL                          LOG2(BURST)
+#define EMC_CLOCK_MHZ                      (120 / ( LPC178X_SCC->emcclksel + 1))
+#define DYNAMIC_REFRESH(REFRESH_RATE_MS)   ( ( ((uint32_t)( ( ( ( ( ((double)REFRESH_RATE_MS) * 1000.0 ) / ((double)ROWS) ) * ((double)EMC_CLOCK_MHZ) * 1000.0 * 1000.0 ) / 1000000.0 ) / 16.0 )) * 16 ) / 16 )
+
 /*
  * Setup external RAM.
  */
@@ -481,13 +517,15 @@ int dram_init(void)
 {
 	volatile struct lpc178x_emc_dy_regs *dy;
 	u32 tmp32;
+	int index;
 
 	dy = &LPC178X_EMC->dy[CONFIG_SYS_RAM_CS];
-
+	LPC178X_SCC->emcdlyctl= 0x00001010;
 	/*
 	 * Address mapping (see Table 133 from the LPC178x/7x User Manual)
 	 */
-	dy->cfg = (LPC178X_EMC_AM << LPC178X_EMC_DYCFG_AM_BITS);
+	//dy->cfg = (LPC178X_EMC_AM << LPC178X_EMC_DYCFG_AM_BITS);
+	dy->cfg = ( /*AM0*/ ( COL_VAL<<7 ) | (SIZE_VAL<<9) | (RBC_BRC<<12) ) | ( /*AM1*/ BUS_WID<<14 );
 
 	/*
 	 * Configure DRAM timing
@@ -515,7 +553,7 @@ int dram_init(void)
 	 */
 	LPC178X_EMC->dy_ctrl =
 		LPC178X_EMC_DYCTRL_CE_MSK | LPC178X_EMC_DYCTRL_CS_MSK |
-		(LPC178X_EMC_DYCTRL_I_NOP << LPC178X_EMC_DYCTRL_I_BITS);
+		((LPC178X_EMC_DYCTRL_I_NOP )<< LPC178X_EMC_DYCTRL_I_BITS);
 	udelay(200000);
 
 	/*
@@ -526,12 +564,32 @@ int dram_init(void)
 		(LPC178X_EMC_DYCTRL_I_PALL << LPC178X_EMC_DYCTRL_I_BITS);
 	LPC178X_EMC->dy_rfsh = LPC178X_EMC_REFRESH_FAST;
 	udelay(1000);
+	
+	LPC178X_EMC->dy_rfsh = 2;/* ( n * 16 ) -> 32 clock cycles */
+	for(index=0;index<0x80;++index);         /* wait 128 AHB clock cycles */
 
+		
 	/*
 	 * Set refresh period
 	 */
-	LPC178X_EMC->dy_rfsh = LPC178X_EMC_REFRESH;
-
+	//LPC178X_EMC->dy_rfsh = LPC178X_EMC_REFRESH;
+	LPC178X_EMC->dy_rfsh = DYNAMIC_REFRESH(64);
+	LPC178X_EMC->dy_ctrl = 0x00000083; /* Issue MODE command */
+	tmp32 = *( (volatile u32 *) ( CONFIG_SYS_RAM_BASE  | ( ( (CAS<<4) | BURST_VAL)<<( BANKS_BITS + COL_BITS + (BUS_WID+1) ) ) ) );
+		
+	/*
+	 * Normal mode
+	 */
+	LPC178X_EMC->dy_ctrl =
+		(LPC178X_EMC_DYCTRL_I_NORMAL << LPC178X_EMC_DYCTRL_I_BITS);
+		
+	/*
+	 * Enable DRAM buffer
+	 */
+	//dy->cfg = (LPC178X_EMC_AM << LPC178X_EMC_DYCFG_AM_BITS) |
+	//	LPC178X_EMC_DYCFG_B_MSK;
+	dy->cfg |= 0x00080000; // Buffer enable
+#if 0
 	/*
 	 * Load mode word, CAS2, burst of 4
 	 */
@@ -552,7 +610,8 @@ int dram_init(void)
 	 */
 	dy->cfg = (LPC178X_EMC_AM << LPC178X_EMC_DYCFG_AM_BITS) |
 		LPC178X_EMC_DYCFG_B_MSK;
-
+#endif
+		
 	/*
 	 * Fill in global info with description of DRAM configuration
 	 */

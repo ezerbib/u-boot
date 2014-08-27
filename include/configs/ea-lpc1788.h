@@ -63,7 +63,7 @@
 /*
  * Monitor prompt
  */
-#define CONFIG_SYS_PROMPT		"EA-LPC1788> "
+#define CONFIG_SYS_PROMPT		"WP5-VH2-MB> "
 
 /*
  * We want to call the CPU specific initialization
@@ -112,7 +112,7 @@
 /*
  * PLL1 Multiplier value (1..32)
  */
-#define CONFIG_LPC178X_PLL1_M		8	/* 12 MHz * 8 = 96 MHz */
+#define CONFIG_LPC178X_PLL1_M		7	/* 12 MHz * 8 = 96 MHz */
 /*
  * PSEL (a 0..3 code for PLL Divider value)
  * P (PPL divider value) = 2 in the power of PSEL
@@ -181,7 +181,7 @@
 #define CONFIG_MEM_NVM_LEN		(512 * 1024)   /* 64, 128, 256 or 512 kB */
 
 #define CONFIG_MEM_RAM_BASE		0x10000000
-#define CONFIG_MEM_RAM_LEN		(32 * 1024)
+#define CONFIG_MEM_RAM_LEN		(16 * 1024)
 #define CONFIG_MEM_RAM_BUF_LEN		(16 * 1024)
 #define CONFIG_MEM_MALLOC_LEN		(12 * 1024)
 #define CONFIG_MEM_STACK_LEN		(4 * 1024)
@@ -198,7 +198,7 @@
 #define CONFIG_SYS_RAM_CS		0       /* 0 .. 3 */
 #define CONFIG_SYS_RAM_BASE		(0xA0000000 +			\
 					 (CONFIG_SYS_RAM_CS * 0x10000000))
-#define CONFIG_SYS_RAM_SIZE		(32 * 1024 * 1024)
+#define CONFIG_SYS_RAM_SIZE		(16 * 1024 * 1024)
 /*
  * Buffers for Ethernet DMA (cannot be in the internal System RAM)
  */
@@ -207,6 +207,7 @@
  * Use the CPU_CLOCK/2 for EMC
  */
 #define CONFIG_LPC178X_EMC_HALFCPU
+//#undef CONFIG_LPC178X_EMC_HALFCPU
 
 /*
  * Configuration of the external Flash memory
@@ -286,7 +287,8 @@
  */
 #define CONFIG_NET_MULTI
 #define CONFIG_LPC178X_ETH
-#define CONFIG_LPC178X_ENET_USE_PHY_RMII
+//#define CONFIG_LPC178X_ENET_USE_PHY_RMII
+#undef CONFIG_LPC178X_ENET_USE_PHY_RMII
 #define CONFIG_LPC178X_ETH_DIV_SEL	7	/* HCLK/28 */
 /*
  * Used only for the final PHY reset, see `lpc178x_phy_final_reset()`.
@@ -390,8 +392,8 @@
 	"flashaddr=80020000\0"					\
 	"flashboot=run addip;bootm ${flashaddr}\0"		\
 	"ethaddr=C0:B1:3C:88:88:88\0"				\
-	"ipaddr=172.17.4.206\0"					\
-	"serverip=172.17.0.1\0"					\
+	"ipaddr=192.168.68.206\0"					\
+	"serverip=192.168.68.1\0"					\
 	"image=lpc178x/uImage\0"				\
 	"netboot=tftp ${image};run addip;bootm\0"		\
 	"update=tftp ${image};"					\
@@ -404,5 +406,6 @@
  */
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_CMDLINE_TAG
+
 
 #endif /* __CONFIG_H */
