@@ -488,6 +488,14 @@ void clock_init(void)
 	 * Set EMC clock rate
 	 */
 	clock_val[CLOCK_EMCCLK] = LPC178X_EMC_RATE;
+	
+	
+	/*
+	 * Set SPI base clock rate
+	 */
+#if defined(CONFIG_LPC_SPI)
+	clock_val[CLOCK_SPI] = LPC178X_PLL1_CLK_OUT;
+#endif
 }
 
 /*

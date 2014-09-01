@@ -61,7 +61,7 @@
 
 #define LPC178X_ENET_GAP2		0x12
 /* FIXME: lpcware port suggests 0, but the User Manual recommends 0xC */
-#define LPC178X_ENET_GAP1		0
+#define LPC178X_ENET_GAP1		0xC
 
 #define LPC178X_PHY_READ_TIMEOUT	2500	/* x 100 usec = 250 ms */
 #define LPC178X_PHY_WRITE_TIMEOUT	2500	/* x 100 usec = 250 ms */
@@ -328,7 +328,7 @@ struct lpc178x_eth_dma_data {
 	 * address boundary.
 	 */
 	struct lpc178x_eth_dma_tx_status tx_status[CONFIG_SYS_TX_ETH_BUFFER];
-	struct lpc178x_eth_dma_rx_status rx_status[CONFIG_SYS_RX_ETH_BUFFER]
+	struct lpc178x_eth_dma_rx_status rx_status[CONFIG_SYS_RX_ETH_BUFFER];
 		__attribute__ ((aligned (8)));
 
 	/*
@@ -1012,6 +1012,25 @@ out:
 	return rv;
 }
 
+#define RINFO_SIZE          0x000007FF  /* Data size in bytes                */
+#define RINFO_CTRL_FRAME    0x00040000  /* Control Frame                     */
+#define RINFO_VLAN          0x00080000  /* VLAN Frame                        */
+#define RINFO_FAIL_FILT     0x00100000  /* RX Filter Failed                  */
+#define RINFO_MCAST         0x00200000  /* Multicast Frame                   */
+#define RINFO_BCAST         0x00400000  /* Broadcast Frame                   */
+#define RINFO_CRC_ERR       0x00800000  /* CRC Error in Frame                */
+#define RINFO_SYM_ERR       0x01000000  /* Symbol Error from PHY             */
+#define RINFO_LEN_ERR       0x02000000  /* Length Error                      */
+#define RINFO_RANGE_ERR     0x04000000  /* Range Error (exceeded max. size)  */
+#define RINFO_ALIGN_ERR     0x08000000  /* Alignment Error                   */
+#define RINFO_OVERRUN       0x10000000  /* Receive overrun                   */
+#define RINFO_NO_DESCR      0x20000000  /* No new Descriptor available       */
+#define RINFO_LAST_FLAG     0x40000000  /* Last Fragment in Frame            */
+#define RINFO_ERR           0x80000000  /* Error Occured (OR of all errors)  */
+#define RINFO_ERR_MASK     (RINFO_FAIL_FILT | RINFO_CRC_ERR   | RINFO_SYM_ERR | \
+                            RINFO_LEN_ERR   | RINFO_ALIGN_ERR | RINFO_OVERRUN)
+#define ETH_MTU          1514
+
 /*
  * Process received frames (if any)
  */
@@ -1026,11 +1045,13 @@ static int lpc178x_eth_recv(struct eth_device *dev)
 
 	/* Determine if a frame has been received */
 	idx = LPC178X_ETH->rxconsidx;
+#if 0
 	if (idx != LPC178X_ETH->rxprodidx) {
 		/* Frame received, get size of RX packet */
 		len = ((mac->dma->rx_status[idx].info & LPC178X_DMA_RBS_SIZE_MSK) >>
 			LPC178X_DMA_RBS_SIZE_BITS) + 1;
 
+			printf("receive eth pkt len=%d\n",len);
 		/* Pass the packet up to the protocol layer */
 		if (len > 0)
 			NetReceive(&mac->dma->rx_buf[idx][0], len);
@@ -1038,6 +1059,31 @@ static int lpc178x_eth_recv(struct eth_device *dev)
 		/* Return DMA buffer */
 		LPC178X_ETH->rxconsidx = (idx + 1) % CONFIG_SYS_RX_ETH_BUFFER;
 	}
+#else
+	while (idx != LPC178X_ETH->rxprodidx) {
+        u32 info = mac->dma->rx_status[idx].info;
+        if (!(info & RINFO_LAST_FLAG)) {
+          goto rel;
+        }
+
+        len = (info & RINFO_SIZE) - 3;
+        if (len > ETH_MTU || (info & RINFO_ERR_MASK)) {
+          /* Invalid frame, ignore it and free buffer. */
+          goto rel;
+        }
+		if (len > 0)
+			NetReceive(&mac->dma->rx_buf[idx][0], len);
+
+rel:
+        if (++idx == CONFIG_SYS_RX_ETH_BUFFER) {
+          idx = 0;
+        }
+        /* Release frame from EMAC buffer. */
+        LPC178X_ETH->rxconsidx = idx;
+
+	}
+
+#endif
 
 	return len;
 }

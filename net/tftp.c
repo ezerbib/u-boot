@@ -101,7 +101,8 @@ extern flash_info_t flash_info[];
 #ifdef CONFIG_TFTP_BLOCKSIZE
 #define TFTP_MTU_BLOCKSIZE CONFIG_TFTP_BLOCKSIZE
 #else
-#define TFTP_MTU_BLOCKSIZE 1468
+//#define TFTP_MTU_BLOCKSIZE 1468
+#define TFTP_MTU_BLOCKSIZE 1200
 #endif
 
 static unsigned short TftpBlkSize=TFTP_BLOCK_SIZE;
@@ -161,6 +162,19 @@ store_block (unsigned block, uchar * src, unsigned len)
 	else
 #endif /* CONFIG_SYS_DIRECT_FLASH_TFTP */
 	{
+		//EZ test
+		
+#if 0
+		int i;
+		for (i=0;i<len;i++)
+		{
+			if (*(src+i)!='\000')
+			{
+				printf("error in recv buffer from TFTP char=%d len=%d ofs=%d\n",*(src+i),len,i);
+				break;
+			}
+		}
+#endif		
 		(void)memcpy((void *)(load_addr + offset), src, len);
 	}
 #ifdef CONFIG_MCAST_TFTP

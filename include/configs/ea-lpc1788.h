@@ -202,7 +202,8 @@
 /*
  * Buffers for Ethernet DMA (cannot be in the internal System RAM)
  */
-#define CONFIG_MEM_ETH_DMA_BUF_BASE	0xA1F00000	/* 31st megabyte */
+//#define CONFIG_MEM_ETH_DMA_BUF_BASE	0xA1F00000	/* 31st megabyte */
+#define CONFIG_MEM_ETH_DMA_BUF_BASE	0xA1F00000	/* */
 /*
  * Use the CPU_CLOCK/2 for EMC
  */
@@ -216,9 +217,9 @@
 #define CONFIG_SYS_FLASH_CS		0
 
 #if defined(CONFIG_SYS_FLASH_CS)
-#define CONFIG_SYS_FLASH_CFG		0x81 /* 16 bit, Byte Lane enabled */
-#define CONFIG_SYS_FLASH_WE		0x2
-#define CONFIG_SYS_FLASH_OE		0x2
+#define CONFIG_SYS_FLASH_CFG		0x80 /* 16 bit, Byte Lane enabled */
+#define CONFIG_SYS_FLASH_WE		0x0
+#define CONFIG_SYS_FLASH_OE		0x0
 #define CONFIG_SYS_FLASH_RD		0x1f
 #define CONFIG_SYS_FLASH_PAGE		0x1f
 #define CONFIG_SYS_FLASH_WR		0x1f
@@ -287,8 +288,8 @@
  */
 #define CONFIG_NET_MULTI
 #define CONFIG_LPC178X_ETH
-//#define CONFIG_LPC178X_ENET_USE_PHY_RMII
-#undef CONFIG_LPC178X_ENET_USE_PHY_RMII
+#define CONFIG_LPC178X_ENET_USE_PHY_RMII
+
 #define CONFIG_LPC178X_ETH_DIV_SEL	7	/* HCLK/28 */
 /*
  * Used only for the final PHY reset, see `lpc178x_phy_final_reset()`.
@@ -303,7 +304,7 @@
  * which determines the number of ethernet RX buffers (number of frames which
  * may be received without processing until overflow happens).
  */
-#define CONFIG_SYS_RX_ETH_BUFFER	5
+#define CONFIG_SYS_RX_ETH_BUFFER    5	
 
 #define CONFIG_SYS_TX_ETH_BUFFER	8
 
@@ -406,6 +407,10 @@
  */
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_CMDLINE_TAG
-
-
+#define CONFIG_CMD_SF
+#define CONFIG_SPI_FLASH
+#define CONFIG_SPI_FLASH_SST
+#define CONFIG_LPC_SPI
+#define CONFIG_CMD_PING
+//#define CONFIG_TFTP_BLOCKSIZE 512
 #endif /* __CONFIG_H */
