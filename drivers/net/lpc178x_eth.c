@@ -448,7 +448,7 @@ static int lpc178x_phy_init(struct lpc178x_eth_dev *mac)
 	}
 
 ok:
-	debug("%s: found PHY id = %#x at addr %#x\n", __func__,
+	printf("%s: found PHY id = %#x at addr %#x\n", __func__,
 	      mac->phy_id, mac->phy_adr);
 	rv = 0;
 out:

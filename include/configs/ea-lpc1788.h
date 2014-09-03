@@ -101,7 +101,7 @@
  * PLL0 Multiplier value (1..32)
  */
 /* TODO: change M to 10 in order to reach 120 MHz CPU clock */
-#define CONFIG_LPC178X_PLL0_M		9	/* 12 MHz * 9 = 108 MHz */
+#define CONFIG_LPC178X_PLL0_M		10	/* 12 MHz * 10 = 120 MHz */
 /*
  * PSEL (a 0..3 code for PLL Divider value)
  * P (PPL divider value) = 2 in the power of PSEL

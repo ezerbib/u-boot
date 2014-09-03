@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="org.eclipse.cdt.cross.arm.gnu.windows.toolchain.base.1119853790">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.cdt.cross.arm.gnu.windows.toolchain.base.1119853790" moduleId="org.eclipse.cdt.core.settings" name="Default">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" id="org.eclipse.cdt.cross.arm.gnu.windows.toolchain.base.1119853790" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="org.eclipse.cdt.cross.arm.gnu.windows.toolchain.base.1119853790.1393656449" name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.cross.arm.gnu.windows.toolchain.base.2064595586" name="org.eclipse.cdt.cross.arm.gnu.windows.toolchain.base" superClass="org.eclipse.cdt.cross.arm.gnu.windows.toolchain.base">
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.target.processor.1157927605" name="Processor" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.target.processor"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.target.architecture.1734095467" name="Architecture" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.target.architecture"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.target.thumb.483934513" name="Thumb (-mthumb)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.target.thumb"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.target.thumbinterwork.804247177" name="Thumb interwork (-mthumb-interwork)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.target.thumbinterwork"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.target.endiannes.905165093" name="Endianness" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.target.endiannes"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.target.fpu.abi.488977157" name="Float ABI" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.target.fpu.abi"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.target.fpu.unit.1341403031" name="FPU Type" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.target.fpu.unit"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.target.other.761108487" name="Other target flags" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.target.other"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.level.205199281" name="Debug level" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.level"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.format.2036631154" name="Debug format" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.format"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.other.1655942146" name="Other debugging flags" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.other"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.prof.1261352316" name="Generate prof information (-p)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.prof"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.gprof.1300471644" name="Generate gprof information (-pg)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.debugging.gprof"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.addtools.createflash.464266426" name="Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.addtools.createflash"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.addtools.createlisting.1799722043" name="Create Extended Listing" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.addtools.createlisting"/>
+							<option id="org.eclipse.cdt.cross.arm.gnu.windows.option.addtools.printsize.844603778" name="Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.windows.option.addtools.printsize"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.GNU_ELF" id="org.eclipse.cdt.cross.arm.gnu.windows.platform.base.1982177583" isAbstract="false" name="Linux Platform" osList="win32" superClass="org.eclipse.cdt.cross.arm.gnu.windows.platform.base"/>
+							<builder id="org.eclipse.cdt.cross.arm.gnu.windows.builder.base.2849793" managedBuildOn="false" name="ARM Windows GNU Make builder (GNUARM, WinARM).Default" superClass="org.eclipse.cdt.cross.arm.gnu.windows.builder.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.assembler.base.1770062223" name="ARM Windows GCC Assembler (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.assembler.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.c.compiler.base.929651521" name="ARM Windows GCC C Compiler (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.c.compiler.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.cpp.compiler.base.1914259435" name="ARM Windows GCC C++ Compiler (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.cpp.compiler.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.c.linker.base.877119583" name="ARM Windows GCC C Linker (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.c.linker.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.cpp.linker.base.663277895" name="ARM Windows GCC C++ Linker (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.cpp.linker.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.archiver.base.1533795707" name="ARM Windows GCC Archiver (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.archiver.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.createflash.base.1669353891" name="ARM Windows GNU Create Flash Image (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.createflash.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.createlisting.base.2074141386" name="ARM Windows GNU Create Listing (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.createlisting.base"/>
+							<tool id="org.eclipse.cdt.cross.arm.gnu.windows.printsize.base.159240454" name="ARM Windows GNU Print Size (GNUARM, WinARM)" superClass="org.eclipse.cdt.cross.arm.gnu.windows.printsize.base"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="u-boot 1.4.1.null.668683646" name="u-boot 1.4.1"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+</cproject>
