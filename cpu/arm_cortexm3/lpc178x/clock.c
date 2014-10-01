@@ -207,6 +207,7 @@ static u32 clock_val[CLOCK_END];
 #define LPC178X_EMC_RATE	(LPC178X_CPU_CLK_SEL_OUT)
 #endif
 
+
 /*
  * Compile time sanity checks for defined board clock setup
  */
@@ -365,6 +366,11 @@ static u32 clock_val[CLOCK_END];
 #endif /* CONFIG_LPC178X_ETH_DIV_SEL */
 #endif /* CONFIG_LPC178X_ETH */
 
+#ifdef CONFIG_LPC178X_EMC_80MHZ
+#undef LPC178X_EMC_RATE
+#define LPC178X_EMC_RATE (LPC178X_CPU_CLK_SEL_OUT )
+//#define LPC178X_EMC_RATE	(LPC178X_CPU_CLK_SEL_OUT /6 *5 )
+#endif
 /*
  * Apply changes made in PLLCON and PLLCFG
  *

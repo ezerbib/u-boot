@@ -150,8 +150,9 @@
  * generate the clock to the peripherals. The rate is divided from the
  * selected clock source (PLL0, internal or main oscillator).
  */
-#define CONFIG_LPC178X_PCLK_DIV		2
-
+//#define CONFIG_LPC178X_PCLK_DIV		2
+// EZ
+#define CONFIG_LPC178X_PCLK_DIV		1
 /*
  * Number of clock ticks in 1 sec
  */
@@ -209,6 +210,7 @@
  */
 #define CONFIG_LPC178X_EMC_HALFCPU
 //#undef CONFIG_LPC178X_EMC_HALFCPU
+#define CONFIG_LPC178X_EMC_80MHZ
 
 /*
  * Configuration of the external Flash memory
