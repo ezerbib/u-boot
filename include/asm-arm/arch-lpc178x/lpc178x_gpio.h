@@ -60,8 +60,24 @@
 	(inv   << LPC178X_GPIO_CONFIG_INV_BIT  ) | \
 	(slew  << LPC178X_GPIO_CONFIG_SLEW_BIT ) | \
 	(od    << LPC178X_GPIO_CONFIG_OD_BITS  ))
+
 /*
- * TBD: similar macros for other pin types (A, U, I, W)
+ * Type W pins (digital pins with selectable input glitch filter)
+ *
+ * Bit 7 (ADMODE) must be set to 1 for normal operation.
+ */
+#define LPC178X_GPIO_CONFIG_W(func,mode,hys,inv,filter,slew,od) \
+	((func  << LPC178X_GPIO_CONFIG_FUNC_BITS ) | \
+	(mode   << LPC178X_GPIO_CONFIG_MODE_BITS ) | \
+	(hys    << LPC178X_GPIO_CONFIG_HYS_BIT   ) | \
+	(inv    << LPC178X_GPIO_CONFIG_INV_BIT   ) | \
+	(1      << LPC178X_GPIO_CONFIG_ADMODE_BIT) | \
+	(filter << LPC178X_GPIO_CONFIG_FILTER_BIT) | \
+	(slew   << LPC178X_GPIO_CONFIG_SLEW_BIT  ) | \
+	(od     << LPC178X_GPIO_CONFIG_OD_BITS   ))
+
+/*
+ * TBD: similar macros for other pin types (A, U, I)
  */
 
 /*

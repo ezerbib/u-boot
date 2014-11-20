@@ -30,16 +30,18 @@
  * SPI registers
  */
 struct lpc_spi {
-	u32 cr;
-	u32 sr;
+	u32 cr0;
+	u32 cr1;
 	u32 dr;
-	u32 ccr;
-	u32 tcr;
-	u32 tsr;
-	u32 reserved;
-	u32 interrupt;
+	u32 sr;
+	u32 cpcr;
+	u32 imsc;
+	u32 ris;
+	u32 mis;
+	u32 icr;
+	u32 dmacr;
 };
-#define LPC_SPI_BASE 0x40100000
+#define LPC_SPI_BASE 0x40030000
 static volatile struct lpc_spi *lpc_spi = (struct lpc_spi *)LPC_SPI_BASE;
 
 #define CONFIG_LPC_CS_GPIO {0, 5}
@@ -47,10 +49,10 @@ static volatile struct lpc_spi *lpc_spi = (struct lpc_spi *)LPC_SPI_BASE;
 /* SPI pins configuration */
 static const struct lpc18xx_pin_config
 lpc_spi_pins_config[] = {
-	{{0, 5}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 1, 0)},
-	{{0, 7}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 1, 0)},
-	{{0, 8}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 1, 0)},
-	{{0, 9}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 1, 0)}
+	{{0, 5}, LPC178X_GPIO_CONFIG_D(0, LPC178X_NO_PULLUP, 0, 0, 0, 0)},
+	{{0, 7}, LPC178X_GPIO_CONFIG_W(2, LPC178X_NO_PULLUP, 0, 0, 1, 0, 0)},
+	{{0, 8}, LPC178X_GPIO_CONFIG_W(2, LPC178X_NO_PULLUP, 0, 0, 1, 0, 0)},
+	{{0, 9}, LPC178X_GPIO_CONFIG_W(2, LPC178X_NO_PULLUP, 0, 0, 1, 0, 0)}
 };
 
 static const struct lpc18xx_iomux_dsc lpc_cs_gpio = CONFIG_LPC_CS_GPIO;
@@ -106,14 +108,14 @@ struct spi_slave *spi_setup_slave(unsigned int bus, unsigned int cs,
 	struct lpc_spi_slave *s;
 	struct spi_slave *slave = NULL;
 	unsigned int spccr;
-
+	printf("spi_setup_slave(bus=%d, cs=%d,hz=%d,mode=%d)\n",bus,cs,hz,mode);
 	if (bus != 0 || cs != 0) {
 		goto done;
 	}
 
 	spccr = (clock_get(CLOCK_SPI) / hz) & 0xfe;
 	if (spccr < 8) {
-		printf("clock get =%d clk=%d - goto done\n",spccr,clock_get(CLOCK_SPI));
+		printf("clock get spccr=%d clk=%d - goto done\n",spccr,clock_get(CLOCK_SPI));
 		goto done;
 	}
 
@@ -155,7 +157,7 @@ int spi_claim_bus(struct spi_slave *slv)
 	struct lpc_spi_slave *s = to_lpc_spi(slv);
 
 	/* set speed */
-	lpc_spi->ccr = s->spccr;
+	lpc_spi->cpsr = s->spccr;
 
 	/* set mode */
 	if (s->mode & SPI_CPHA) {

@@ -200,7 +200,7 @@ endif
 
 AFLAGS := $(AFLAGS_DEBUG) -D__ASSEMBLY__ $(CPPFLAGS)
 
-LDFLAGS += -Bstatic -T $(obj)u-boot.lds $(PLATFORM_LDFLAGS)
+LDFLAGS += --no-strip-discarded -Bstatic -T $(obj)u-boot.lds $(PLATFORM_LDFLAGS)
 ifneq ($(TEXT_BASE),)
 LDFLAGS += -Ttext $(TEXT_BASE)
 endif

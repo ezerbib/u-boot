@@ -368,8 +368,12 @@ static u32 clock_val[CLOCK_END];
 
 #ifdef CONFIG_LPC178X_EMC_80MHZ
 #undef LPC178X_EMC_RATE
-#define LPC178X_EMC_RATE (LPC178X_CPU_CLK_SEL_OUT )
+//120Mhz
+//#define LPC178X_EMC_RATE (LPC178X_CPU_CLK_SEL_OUT )
+//100Mhz
 //#define LPC178X_EMC_RATE	(LPC178X_CPU_CLK_SEL_OUT /6 *5 )
+//80Mhz
+#define LPC178X_EMC_RATE	(LPC178X_CPU_CLK_SEL_OUT /3 *2 )
 #endif
 /*
  * Apply changes made in PLLCON and PLLCFG
@@ -454,7 +458,9 @@ static void clock_setup(void)
 	 * EMC clock
 	 */
 #ifdef CONFIG_LPC178X_EMC_HALFCPU
-	LPC178X_SCC->emcclksel = LPC178X_SCC_EMCCLKSEL_HALFCPU_MSK;
+	//EZ
+	//LPC178X_SCC->emcclksel = LPC178X_SCC_EMCCLKSEL_HALFCPU_MSK;
+	LPC178X_SCC->emcclksel = 0;
 #else /* CONFIG_LPC178X_EMC_HALFCPU */
 	LPC178X_SCC->emcclksel = 0;
 #endif /* CONFIG_LPC178X_EMC_HALFCPU */
@@ -500,7 +506,8 @@ void clock_init(void)
 	 * Set SPI base clock rate
 	 */
 #if defined(CONFIG_LPC_SPI)
-	clock_val[CLOCK_SPI] = LPC178X_PLL1_CLK_OUT;
+	//clock_val[CLOCK_SPI] = LPC178X_PLL1_CLK_OUT;
+	clock_val[CLOCK_SPI] = LPC178X_OSC_RATE *10 ; //120Mhz
 #endif
 }
 

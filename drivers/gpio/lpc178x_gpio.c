@@ -149,6 +149,7 @@ int lpc178x_gpio_config_direction(const struct lpc178x_gpio_dsc *dsc, int output
 
 	rv = lpc178x_validate_gpio(dsc);
 	if (rv == 0) {
+		//printf("gpio config (%d,%d)=%d\n",dsc->port,dsc->pin,output);
 		if (output)
 			LPC178X_GPIO(dsc->port)->fiodir |= (1 << dsc->pin);
 		else
@@ -168,6 +169,7 @@ int lpc178x_gpout_set(const struct lpc178x_gpio_dsc *dsc, int state)
 
 	rv = lpc178x_validate_gpio(dsc);
 	if (rv == 0) {
+		//printf("gpio set (%d,%d)=%d\n",dsc->port,dsc->pin,state);
 		if (state)
 			 LPC178X_GPIO(dsc->port)->fioset = (1 << dsc->pin);
 		else
@@ -198,20 +200,25 @@ int lpc178x_gpin_get(const struct lpc178x_gpio_dsc *dsc)
  */
 void lpc_gpio_dir(struct lpc18xx_iomux_dsc pin, u8 dir)
 {
-	if (dir) {
-		LPC18XX_GPIO->dir[pin.group] |= (1 << pin.pin);
-	} else {
-		LPC18XX_GPIO->dir[pin.group] &= ~(1 << pin.pin);
-	}
+	struct lpc178x_gpio_dsc dsc;
+	dsc.port=pin.group;
+	dsc.pin=pin.pin;
+	lpc178x_gpio_config_direction(&dsc, dir);
 }
 
 void lpc_gpio_set(struct lpc18xx_iomux_dsc pin)
 {
-	LPC18XX_GPIO->set[pin.group] = (1 << pin.pin);
+	struct lpc178x_gpio_dsc dsc;
+	dsc.port=pin.group;
+	dsc.pin=pin.pin;
+	lpc178x_gpout_set(&dsc,1);
 }
 
 void lpc_gpio_clear(struct lpc18xx_iomux_dsc pin)
 {
-	LPC18XX_GPIO->clr[pin.group] = (1 << pin.pin);
+	struct lpc178x_gpio_dsc dsc;
+	dsc.port=pin.group;
+	dsc.pin=pin.pin;
+	lpc178x_gpout_set(&dsc,0);
 }
 

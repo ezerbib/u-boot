@@ -29,6 +29,7 @@
 /*
  * Disable debug messages
  */
+//#define DEBUG
 #undef DEBUG
 
 /*
@@ -393,7 +394,7 @@
 	"loadaddr=0xA0000000\0"					\
 	"addip=setenv bootargs ${bootargs} ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}:${hostname}:eth0:off\0"				\
 	"flashaddr=80020000\0"					\
-	"flashboot=run addip;bootm ${flashaddr}\0"		\
+	"flashboot=run addip;sf probe 0;sf read ${loadaddr} 0x40000 0x200000;bootm ${loadaddr}\0"		\
 	"ethaddr=C0:B1:3C:88:88:88\0"				\
 	"ipaddr=192.168.68.206\0"					\
 	"serverip=192.168.68.1\0"					\
@@ -412,7 +413,8 @@
 #define CONFIG_CMD_SF
 #define CONFIG_SPI_FLASH
 #define CONFIG_SPI_FLASH_SST
-#define CONFIG_LPC_SPI
+#define CONFIG_PL022_SPI
+#define CONFIG_ENV_SPI_MAX_HZ 24000000
 #define CONFIG_CMD_PING
 //#define CONFIG_TFTP_BLOCKSIZE 512
 #endif /* __CONFIG_H */
