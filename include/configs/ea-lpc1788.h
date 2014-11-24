@@ -394,13 +394,15 @@
 	"loadaddr=0xA0000000\0"					\
 	"addip=setenv bootargs ${bootargs} ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}:${hostname}:eth0:off\0"				\
 	"flashaddr=80020000\0"					\
-	"flashboot=run addip;sf probe 0;sf read ${loadaddr} 0x40000 0x200000;bootm ${loadaddr}\0"		\
+	"faddr_ub=0x20000\0"					\
+	"faddr_ke_si=0x27D000\0"					\
+	"flashboot=run addip;sf probe 0;sf read ${loadaddr} ${faddr_ub} ${faddr_ke_si};bootm ${loadaddr}\0"		\
 	"ethaddr=C0:B1:3C:88:88:88\0"				\
 	"ipaddr=192.168.68.206\0"					\
 	"serverip=192.168.68.1\0"					\
 	"image=lpc178x/uImage\0"				\
 	"netboot=tftp ${image};run addip;bootm\0"		\
-	"update=tftp ${image};"					\
+	"update_ke=tftp;sf probe 0:0 ; sf erase ${faddr_ub} ${faddr_ke_si} ; sf write ${loadaddr} ${faddr_ub} ${faddr_ke_si}\0"					\
 	"prot off ${flashaddr} +${filesize};"			\
 	"era ${flashaddr} +${filesize};"			\
 	"cp.b ${loadaddr} ${flashaddr} ${filesize}\0"
