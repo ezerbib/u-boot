@@ -217,7 +217,7 @@
  * Configuration of the external Flash memory
  */
 /* Define this to enable NOR FLash support */
-#define CONFIG_SYS_FLASH_CS		0
+//#define CONFIG_SYS_FLASH_CS		0
 
 #if defined(CONFIG_SYS_FLASH_CS)
 #define CONFIG_SYS_FLASH_CFG		0x80 /* 16 bit, Byte Lane enabled */
@@ -247,8 +247,10 @@
 /*
  * Store env in memory only, if no flash.
  */
-#define CONFIG_ENV_IS_NOWHERE
+//#define CONFIG_ENV_IS_NOWHERE
 #define CONFIG_SYS_NO_FLASH
+#undef CONFIG_SYS_FLASH_CFI
+#undef CONFIG_FLASH_CFI_DRIVER
 #endif
 
 #define CONFIG_ENV_SIZE			(4 * 1024)
@@ -398,9 +400,9 @@
 	"faddr_ke_si=0x27D000\0"					\
 	"flashboot=run addip;sf probe 0;sf read ${loadaddr} ${faddr_ub} ${faddr_ke_si};bootm ${loadaddr}\0"		\
 	"ethaddr=C0:B1:3C:88:88:88\0"				\
-	"ipaddr=192.168.68.206\0"					\
+	"ipaddr=192.168.1.39\0"					\
 	"netmask=255.255.0.0\0"                     \
-	"serverip=192.168.68.1\0"					\
+	"serverip=192.168.1.1\0"					\
 	"image=lpc178x/uImage\0"				\
 	"netboot=tftp ${image};run addip;bootm\0"		\
 	"update_ke=tftp;sf probe 0:0 ; sf erase ${faddr_ub} ${faddr_ke_si} ; sf write ${loadaddr} ${faddr_ub} ${faddr_ke_si}\0"					\
@@ -420,4 +422,9 @@
 #define CONFIG_ENV_SPI_MAX_HZ 24000000
 #define CONFIG_CMD_PING
 //#define CONFIG_TFTP_BLOCKSIZE 512
+#define CONFIG_ENV_IS_IN_SPI_FLASH
+#define CONFIG_ENV_SIZE    0x00001000
+#define CONFIG_ENV_SECT_SIZE    0x00001000
+//#define CONFIG_ENV_ADDR    0x00000000
+#define CONFIG_ENV_OFFSET  0x00000000
 #endif /* __CONFIG_H */
