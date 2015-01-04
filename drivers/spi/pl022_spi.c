@@ -266,7 +266,8 @@ struct spi_slave *spi_setup_slave(unsigned int bus, unsigned int cs,
        writel(cpsr, &pl022->ssp_cpsr);
        cr0 = readl(&pl022->ssp_cr0);
        writel(cr0 | (scr - 1) << SSP_SCR_SHFT, &pl022->ssp_cr0);
-
+       cr0 = readl(&pl022->ssp_cr0);
+       printf("SPI CR0=0x%X \n",cr0);
        return &ps->slave;
 }
 

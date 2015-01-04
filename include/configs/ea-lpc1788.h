@@ -399,6 +399,7 @@
 	"flashboot=run addip;sf probe 0;sf read ${loadaddr} ${faddr_ub} ${faddr_ke_si};bootm ${loadaddr}\0"		\
 	"ethaddr=C0:B1:3C:88:88:88\0"				\
 	"ipaddr=192.168.68.206\0"					\
+	"netmask=255.255.0.0\0"                     \
 	"serverip=192.168.68.1\0"					\
 	"image=lpc178x/uImage\0"				\
 	"netboot=tftp ${image};run addip;bootm\0"		\
