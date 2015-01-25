@@ -394,7 +394,7 @@
  */
 #define CONFIG_EXTRA_ENV_SETTINGS				\
 	"loadaddr=0xA0000000\0"					\
-	"addip=setenv bootargs ${bootargs} ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}:${hostname}:eth0:off\0"				\
+	"addip=setenv bootargs ${bootargs} ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}:${hostname}:eth0:off ssh=1\0"				\
 	"flashaddr=80020000\0"					\
 	"faddr_ub=0x20000\0"					\
 	"faddr_ke_si=0x27D000\0"					\
