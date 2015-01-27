@@ -187,6 +187,8 @@ sst_write(struct spi_flash *flash, u32 offset, size_t len, const void *buf)
 	int ret;
 	u8 cmd[4];
 
+	printf("#");
+
 	ret = spi_claim_bus(flash->spi);
 	if (ret) {
 		debug("SF: Unable to claim SPI bus\n");
@@ -217,6 +219,12 @@ sst_write(struct spi_flash *flash, u32 offset, size_t len, const void *buf)
 		     spi_w8r8(flash->spi, CMD_SST_RDSR), buf + actual, cmd[0],
 		     offset);
 
+		if (actual%20480==0)
+		{
+			printf("#");
+		}
+
+
 		ret = spi_flash_cmd_write(flash->spi, cmd, cmd_len,
 		                          buf + actual, 2);
 		if (ret) {
@@ -230,7 +238,10 @@ sst_write(struct spi_flash *flash, u32 offset, size_t len, const void *buf)
 
 		cmd_len = 1;
 		offset += 2;
+
 	}
+
+	printf("\n");
 
 	if (!ret)
 		ret = sst_disable_writing(flash);

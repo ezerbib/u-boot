@@ -381,7 +381,7 @@
 #define CONFIG_ZERO_BOOTDELAY_CHECK
 #define CONFIG_HOSTNAME			ea-lpc1788
 #define CONFIG_BOOTARGS			"lpc178x_platform=ea-lpc1788 "\
-					"console=ttyS0,115200 panic=10"
+					"console=ttyS0,115200 panic=10 ssh=1 "
 #define CONFIG_BOOTCOMMAND		"run flashboot"
 
 /*
@@ -394,7 +394,7 @@
  */
 #define CONFIG_EXTRA_ENV_SETTINGS				\
 	"loadaddr=0xA0000000\0"					\
-	"addip=setenv bootargs ${bootargs} ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}:${hostname}:eth0:off ssh=1\0"				\
+	"addip=setenv bootargs ${bootargs} ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}:${hostname}:eth0:off\0"				\
 	"flashaddr=80020000\0"					\
 	"faddr_ub=0x20000\0"					\
 	"faddr_ke_si=0x27D000\0"					\
