@@ -167,7 +167,7 @@ static int pl022_is_supported(struct pl022_spi_slave *ps)
        return 0;
 }
 
-struct pl022_spi_slave *spi_alloc_slave(unsigned int bus, unsigned int cs)
+struct pl022_spi_slave *pl022_spi_alloc_slave(unsigned int bus, unsigned int cs)
 {
 	struct pl022_spi_slave *s;
 	s = malloc(sizeof(struct pl022_spi_slave));
@@ -194,7 +194,7 @@ struct spi_slave *spi_setup_slave(unsigned int bus, unsigned int cs,
        if (!spi_cs_is_valid(bus, cs))
                return NULL;
 
-       ps = spi_alloc_slave(bus, cs);
+       ps = pl022_spi_alloc_slave(bus, cs);
        if (!ps)
                return NULL;
 

@@ -26,13 +26,6 @@
 
 /* Controller-specific definitions: */
 
-/* CONFIG_HARD_SPI triggers SPI bus initialization in PowerPC */
-#ifdef CONFIG_MPC8XXX_SPI
-# ifndef CONFIG_HARD_SPI
-#  define CONFIG_HARD_SPI
-# endif
-#endif
-
 /* SPI mode flags */
 #define	SPI_CPHA	0x01			/* clock phase */
 #define	SPI_CPOL	0x02			/* clock polarity */
@@ -56,10 +49,13 @@
  *
  *   bus:	ID of the bus that the slave is attached to.
  *   cs:	ID of the chip select connected to the slave.
+ *   max_write_size:	If non-zero, the maximum number of bytes which can
+ *		be written at once, excluding command bytes.
  */
 struct spi_slave {
 	unsigned int	bus;
 	unsigned int	cs;
+	unsigned int max_write_size;
 };
 
 /*-----------------------------------------------------------------------
@@ -68,6 +64,47 @@ struct spi_slave {
  * TODO: I don't think we really need this.
  */
 void spi_init(void);
+
+/**
+ * spi_do_alloc_slave - Allocate a new SPI slave (internal)
+ *
+ * Allocate and zero all fields in the spi slave, and set the bus/chip
+ * select. Use the helper macro spi_alloc_slave() to call this.
+ *
+ * @offset: Offset of struct spi_slave within slave structure
+ * @size: Size of slave structure
+ * @bus: Bus ID of the slave chip.
+ * @cs: Chip select ID of the slave chip on the specified bus.
+ */
+void *spi_do_alloc_slave(int offset, int size, unsigned int bus,
+			 unsigned int cs);
+
+/**
+ * spi_alloc_slave - Allocate a new SPI slave
+ *
+ * Allocate and zero all fields in the spi slave, and set the bus/chip
+ * select.
+ *
+ * @_struct: Name of structure to allocate (e.g. struct tegra_spi). This
+ *	structure must contain a member 'struct spi_slave *slave'.
+ * @bus: Bus ID of the slave chip.
+ * @cs: Chip select ID of the slave chip on the specified bus.
+ */
+#define spi_alloc_slave(_struct, bus, cs) \
+	spi_do_alloc_slave(offsetof(_struct, slave), \
+			    sizeof(_struct), bus, cs)
+
+/**
+ * spi_alloc_slave_base - Allocate a new SPI slave with no private data
+ *
+ * Allocate and zero all fields in the spi slave, and set the bus/chip
+ * select.
+ *
+ * @bus: Bus ID of the slave chip.
+ * @cs: Chip select ID of the slave chip on the specified bus.
+ */
+#define spi_alloc_slave_base(bus, cs) \
+	spi_do_alloc_slave(0, sizeof(struct spi_slave), bus, cs)
 
 /*-----------------------------------------------------------------------
  * Set up communications parameters for a SPI slave.
@@ -174,6 +211,14 @@ void spi_cs_activate(struct spi_slave *slave);
  * select to the device identified by "slave".
  */
 void spi_cs_deactivate(struct spi_slave *slave);
+
+/*-----------------------------------------------------------------------
+ * Set transfer speed.
+ * This sets a new speed to be applied for next spi_xfer().
+ *   slave:	The SPI slave
+ *   hz:	The transfer speed
+ */
+void spi_set_speed(struct spi_slave *slave, uint hz);
 
 /*-----------------------------------------------------------------------
  * Write 8 bits, then read 8 bits.
